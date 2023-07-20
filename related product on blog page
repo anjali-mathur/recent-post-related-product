@@ -1,0 +1,62 @@
+  <div class="container">
+          {% assign cat = blog.handle %}
+          <div class="row">
+            <div class="col-sm-12">
+              <h4>Recent Posts</h4>
+            </div>
+          </div>
+          <div class="releated-articles slider-ver">
+            <div class="widget">
+  <div class="latest-blog-posts-wrapper">
+    <ul class="latest-blog-posts-list">
+    {% for article in blogs[cat].articles limit: 5 %}
+      <li>{{ article.title | link_to: article.url }}</li>
+    {% endfor %}
+    </ul>
+  </div>
+</div>
+          </div>
+  </div>
+  
+          {% assign cat = blog.handle %}
+          {% assign related_posts = "" %}
+  	{% for tag in article.tags %}
+    {% if tag contains 'product_' %}
+    {% assign coll_handle = tag | remove: 'product_' %}
+    {%- assign product = all_products[coll_handle] -%}
+       {% capture post %}
+  <div style="text-align: center;">
+      <span> <img src="{{ product.featured_image | img_url: '200x' }}">  </span>
+    <span> {{ product.title }}</span>
+       <p>{{ product.price | money }}</p>
+</div>
+          {% endcapture %}
+    {% assign related_posts = related_posts | append:post %}
+    {% endif %}
+  {% endfor %}
+
+ 
+
+  {% if related_posts.size > 0 %}
+    <div class="container">
+     <div class="row">
+            <div class="col-sm-12">
+              <h4>FEATURED PRODUCTS</h4>
+            </div>
+          </div>
+      <div class="article-product"> {{ related_posts }} </div>
+     </div>
+{% endif %}
+  <script>
+    $( document ).ready(function() {
+    $(".article-product").slick({
+   slidesToShow: 1,
+   infinite:false,
+   slidesToScroll: 1,
+   autoplay: true,
+   autoplaySpeed: 2000
+     // dots: false, Boolean
+    // arrows: false, Boolean
+  });
+});
+  </script>
